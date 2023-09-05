@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MatrixWebsite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            background-color: rgb(0, 0, 0);
+        }
+        #canvas {
+            background-color: rgb(0, 0, 0);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #settings {
+            position: absolute;
+            top: 0px;
+            left: calc(100% - 600px);
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            width: 560px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #txt {
+            color: rgb(255, 255, 255);
+            font-size: 24px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgb(0, 255, 191);
+        }
+        p {
+            color: white;
+            font-size: 16px;
+            text-shadow: 0 0 5px rgb(0, 255, 191);
+            margin-bottom: 10px;
+        }
+        #sizeIn {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        #fps {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        #spc {
+            color: white;
+            text-shadow: 0 0 15px rgb(0, 255, 191);
+            font-size: 28px;
+            margin-top: 40px;
+        }
+        #resetButton {
+            width: 100px;
+            height: 50px;
+            border: 2px solid rgb(152, 254, 0);
+            border-radius: 4px;
+            background-color: rgb(23, 23, 23);
+            /*position: absolute;
+            top: 870px;*/
+        }
+        #resetButton:hover {
+            background-color: rgb(54, 54, 54);
+        }
+        #resetButton:active {
+            background-color: rgb(75, 75, 75);
+        }
+        .gradient-input {
+            width: 100px;
+            border: 1.5px solid rgb(152, 254, 0);
+            background-color: grey;
+            border-radius: 2px;
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: border 0.3s, background-color 0.3s;
+        }
+
+        .gradient-input:focus {
+            border-color: #00ffbf;
+            background-color: #333333;
+        }
+
+        .gradient-label {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            margin-bottom: 5px;
+        }
+        #gradientOffset {
+            position: absolute;
+            top: 786px;
+            left: 60px;
+        }
+        #t1 {
+            position: absolute;
+            left: calc(100px - 40px);
+            top: 760px;
+        }
+        #t2 {
+            position: absolute;
+            left: calc(100px - 40px);
+            top: 810px;
+        }
+        #gradientColor {
+            position: absolute;
+            top: 835px;
+            left: 60px;
+        }
+        #t3 {
+            position: absolute;
+            top: 760px;
+            left: 360px;
+        }
+        #gradientOffset2 {
+            position: absolute;
+            top: 786px;
+            left: 408px;
+        }
+        #t4 {
+            position: absolute;
+            top: 810px;
+            left: 360px;
+        }
+        #gradientColor2 {
+            position: absolute;
+            top: 835px;
+            left: 408px;
+        }
+        #t5 {
+            position: absolute;
+            left: calc(100px - 40px);
+            top: 872px;
+        }
+        #gradientOffset3 {
+            position: absolute;
+            left: 60px;
+            top: 896px;
+        }
+        #t6 {
+            position: absolute;
+            left: calc(100px - 40px);
+            top: 922px;
+        }
+        #gradientColor3 {
+            position: absolute;
+            left: 60px;
+            top: 948px;
+        }
+        #t7 {
+            position: absolute;
+            top: 872px;
+            left: 360px;
+        }
+        #gradientOffset4 {
+            position: absolute;
+            top: 896px;
+            left: 408px;
+        }
+        #t8 {
+            position: absolute;
+            top: 922px;
+            left: 360px;
+        }
+        #gradientColor4 {
+            position: absolute;
+            top: 948px;
+            left: 408px;
+        }
+        #drop {
+            border-radius: 5px;
+        }
+        #symbol {
+            border-radius: 5px;
+        }
+        :placeholder-shown {
+            text-align: center;
+        }
+        #colorIn {
+            width: 100%;
+            margin-bottom: 20px;
+            background-color: grey;
+            border-radius: 4px;
+            border: 2px solid rgb(152, 254, 0);
+            transition: border 0.3s,background-color 0.3s;
+        }
+        #colorIn:focus {
+            border: 2px solid #00ffbf;
+            background-color: #333333;
+        }
+        #count {
+            width: 100px;
+            border: 1.5px solid rgb(152, 254, 0);
+            background-color: grey;
+            border-radius: 2px;
+            color: white;
+            text-align: center;
+            transition: border 0.3s, background-color 0.3s;
+        }
+        #count:focus {
+            border: 1.5px solid #00ffbf;
+            background-color: #333333;
+        }
+        #symbolsType {
+            width: 100px;
+            border: 1.5px solid rgb(152, 254, 0);
+            background-color: grey;
+            border-radius:2px;
+            text-align: center;
+            color: white;
+            transition: border 0.3s, background-color 0.3s;
+        }
+        #symbolsType:focus {
+            border: 1.5px solid #00ffbf;
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="settings">
+        <h1 id="txt">Matrix Settings</h1>
+        <p>Font Size:</p>
+        <input type="range" min="1" max="60" value="0.5" step="0.5" id="sizeIn">
+        <p>Color:</p>
+        <input type="color" id="colorIn">
+        <p>FPS:</p>
+        <input type="range" min="0.0001" max="170" value="0.5" step="0.5" id="fps">
+        <h1 id="spc">Special Settings</h1><br>
+        <p>Rain Drops:</p>
+        <!--<input type="range" min="1" max="150" value="0.5" step="0.5" id="count"><br>-->
+        <input type="text" id="count" placeholder="drops"><br>
+        <button onclick="init()" style="background-color: black; width: 50px;" id="drop"><p>Add</p></button><br>
+        <p>Symbols Type:</p>
+        <input type="text" id="symbolsType" placeholder="symbols"><br>
+        <button onclick="init2()" style="background-color: black; width: 50px"id="symbol"><p>Add</p></button><br>
+
+        <p class="gradient-label">Linear Gradient Position:</p>
+        <input type="text" class="gradient-input" id="gradientX" placeholder="x1">
+        <input type="text" class="gradient-input" id="gradientY" placeholder="y1">
+        <input type="text" class="gradient-input" id="gradientX2" placeholder="x2">
+        <input type="text" class="gradient-input" id="gradientY2" placeholder="y2">
+        <button onclick="updateGradient()" style="background-color: black; width: 70px; border-radius: 5px;"><p>Add</p></button><br>
+
+        <!-- New inputs for gradient offset and color -->
+        <p class="gradient-label" id="t1">Gradient Offset:</p>
+        <input type="text" class="gradient-input" id="gradientOffset" placeholder="Offset">
+        
+        <p class="gradient-label" id="t2">Gradient Color:</p>
+        <input type="color" class="gradient-input" id="gradientColor">
+
+        <p class="gradient-label" id="t3">Gradient Offset 2:</p>
+        <input type="text" class="gradient-input" id="gradientOffset2" placeholder="Offset">
+
+        <p class="gradient-label" id="t4">Gradient Color 2:</p>
+        <input type="color" class="gradient-input" id="gradientColor2">
+
+        <p class="gradient-label" id="t5">Gradient Offset 3:</p>
+        <input type="text" class="gradient-input" id="gradientOffset3" placeholder="Offset">
+
+        <p class="gradient-label" id="t6">Gradient Color 3:</p>
+        <input type="color" class="gradient-input" id="gradientColor3">
+
+        <p class="gradient-label" id="t7">Gradient Offset 4:</p>
+        <input type="text" class="gradient-input" id="gradientOffset4" placeholder="Offset">
+
+        <p class="gradient-label" id="t8">Gradient Color 4:</p>
+        <input type="color" class="gradient-input" id="gradientColor4">
+
+    <!-- ... (Your existing settings HTML) ... -->
+
+        <!--OLD CODEEEEEE. DOESN'T WORK :(-->
+        <!--<p id="xText">x1</p>
+        <p id="yText">y1</p>
+        <p id="x2Text">x2</p>
+        <p id="y2Text">y2</p>-->
+        <!--<input type="text" style="width: 50px; border: 1.5px solid rgb(152, 254, 0); background-color: grey;" id="gradientX"><br>
+        <input type="text" style="width: 50px; border: 1.5px solid rgb(152, 254, 0); background-color: grey;" id="gradientY"><br>
+        <input type="text" style="width: 50px; border: 1.5px solid rgb(152, 254, 0); background-color: grey;" id="gradientX2"><br>
+        <input type="text" style="width: 50px; border: 1.5px solid rgb(152, 254, 0); background-color: grey;" id="gradientY2"><br>-->
+        <!--<button onclick="callGradient()" style="background-color: black; width: 70px;"><p>Add</p></button>-->
+        <button onclick="resetFunction()" id="resetButton"><p style="color: rgb(255, 255, 255); text-shadow: 0 0 5px white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Reset</p></button>
+        </div>
+    <script src="code.js"></script>
+</body>
+</html>
+<!---->

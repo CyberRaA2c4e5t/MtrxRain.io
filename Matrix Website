@@ -1,0 +1,215 @@
+/**@type {HTMLCanvasElement} */
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let gradientOffset = undefined; // Default offset
+let gradientColor = undefined; // Default color
+
+let gradientOffset2 = undefined; // Default offset 2
+let gradientColor2 = undefined; // Default color 2
+
+let gradientOffset3 = undefined; // Default offset 3
+let gradientColor3 = undefined; // Default color 3
+
+let gradientOffset4 = undefined; // Default offset 4
+let gradientColor4 = undefined; // Default color 4
+
+let x,y,x2,y2;
+
+function updateGradient() {
+    const newX = parseFloat(document.getElementById('gradientX').value);
+    const newY = parseFloat(document.getElementById('gradientY').value);
+    const newX2 = parseFloat(document.getElementById('gradientX2').value);
+    const newY2 = parseFloat(document.getElementById('gradientY2').value);
+
+    if (!isNaN(newX) && !isNaN(newY) && !isNaN(newX2) && !isNaN(newY2)) {
+        x = newX;
+        y = newY;
+        x2 = newX2;
+        y2 = newY2;
+
+        // Apply the new gradient
+        applyGradient();
+    } else {
+        alert('Please enter valid numbers for gradient coordinates.');
+    }
+}
+function applyGradient() {
+    let gradient = ctx.createLinearGradient(x, y, x2, y2);
+    
+    // Set the color stop based on the user's input
+    gradient.addColorStop(gradientOffset, gradientColor);
+    gradient.addColorStop(gradientOffset2,gradientColor2);
+    gradient.addColorStop(gradientOffset3,gradientColor3);
+    gradient.addColorStop(gradientOffset4,gradientColor4);
+
+    matrixColor = gradient;
+}
+
+// Update the gradient offset when the input changes
+document.getElementById('gradientOffset').addEventListener('input', function (event) {
+    gradientOffset = parseFloat(event.target.value);
+});
+
+// Update the gradient color when the input changes
+document.getElementById('gradientColor').addEventListener('input', function (event) {
+    gradientColor = event.target.value;
+});
+
+document.getElementById('gradientOffset2').addEventListener('input',function(event){
+    gradientOffset2 = parseFloat(event.target.value);
+});
+
+document.getElementById('gradientColor2').addEventListener('input',function(event){
+    gradientColor2 = event.target.value;
+});
+
+document.getElementById('gradientOffset3').addEventListener('input',function(event){
+    gradientOffset3 = parseFloat(event.target.value);
+});
+
+document.getElementById('gradientColor3').addEventListener('input',function(event){
+    gradientColor3 = event.target.value;
+});
+
+document.getElementById('gradientOffset4').addEventListener('input',function(event){
+    gradientOffset4 = parseFloat(event.target.value);
+});
+
+document.getElementById('gradientColor4').addEventListener('input',function(event){
+    gradientColor4 = event.target.value;
+});
+// ... (your existing code)
+
+let matrixColor = undefined;
+let fontSize = 20;
+let fps = 50;
+let symType = '';//'*?-アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiopasdfghjklzxcvbnm!@#$%^&+';
+document.getElementById('sizeIn').addEventListener('input',function(event){
+    fontSize = parseFloat(event.target.value);
+    for (const symbol of symbolArray) {
+        symbol.fontNumber = fontSize;
+        symbol.fontFamily = `${fontSize}px monospace`;
+    }
+});
+document.getElementById('colorIn').addEventListener('input',function(event){
+    matrixColor = event.target.value;
+});
+
+document.getElementById('fps').addEventListener('input',function(event){
+    fps = parseFloat(event.target.value);
+});
+
+let sym = document.getElementById('symbolsType');
+sym.addEventListener('input',function(event){
+    symType = event.target.value;
+});
+function init2() {
+    symbol.characters = symType;
+}
+
+let opacity = 0.1;
+class Symbol1 {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.speedY = 25;
+        this.fontNumber = fontSize;//Math.random() * 10 + 10;
+        this.characters = symType
+        this.text = '';
+        this.fontFamily = this.fontNumber + 'px monospace';
+    }
+    update() { 
+       opacity += 0.005;
+       if (opacity > 1) {
+           opacity = 1;
+       }
+        this.y += this.speedY;
+        if (this.y > canvas.height && this.y > Math.random() * 20 + 20) {
+            this.x = Math.random() * canvas.width;
+            this.y = 0 - Math.random() * 5;
+        }
+        this.text = this.characters.charAt(Math.floor(Math.random() * this.characters.length));
+    }
+    draw() {
+        ctx.shadowColor = 'rgb(0,0,0)';
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+
+        ctx.fillStyle = matrixColor;
+        ctx.font = this.fontFamily;
+        ctx.fillText(this.text,this.x,this.y,200);
+    }
+}
+
+let columns = null;
+const symbol = new Symbol1();
+const symbolArray = [];
+let rainCount = document.getElementById('count');
+rainCount.addEventListener('input',function(event2){
+    columns = parseFloat(event2.target.value);    
+});
+
+function init() {
+    columns = parseFloat(rainCount.value);
+    symbolArray.length = 0; // Clear the array
+    for (let i = 0; i < columns; i++) {
+        symbolArray.push(new Symbol1());
+    }
+}
+
+function Program() {
+    for (let i = 0; i < symbolArray.length; i++) {
+        const matrix = symbolArray[i];
+        matrix.update();
+        matrix.draw();
+    }
+}
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+let settings = document.getElementById('settings').style;
+window.addEventListener('keydown',function(event){
+    if (event.key === 'q' || event.key === 'Q') {
+        settings.left = 'calc(100% - 600px)';
+    }
+    if (event.key === 'e' || event.key === 'E') {
+        settings.left = '1950px';
+    }
+    /*if (event.key === 'q' || event.key === 'Q') {
+        if (settings.style.left === 'calc(100% - 600px)') {
+            settings.style.left = '-600px';
+        } else {
+            settings.style.left = 'calc(100% - 600px)';
+        }
+    }
+    if (event.key === 'e' || event.key === 'E') {
+        settings.style.left = '1950px';
+    }*/
+});
+
+window.addEventListener('resize', resizeCanvas);
+
+const resetFunction = () => {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    //matrixColor = 'green';
+    fps = 50;
+    matrixColor = undefined;
+    fontSize = 20;
+    columns = 0;
+};
+const canvas1 = document.getElementById('canvas').style;
+function animation() {
+    //ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    Program();
+    //document.getElementById('num').innerHTML = columns;
+    setTimeout(animation, fps);
+    //requestAnimationFrame(animation);
+}
+animation();
